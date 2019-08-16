@@ -1,4 +1,3 @@
-#!/usr/bin/env amm
 
 /*
 Step1
@@ -1471,10 +1470,6 @@ def snippy_command(genome_name:String, reference_genome:String) = {
 }
 
 
-
-
-
-
 // snippy_core( List("PT000033","PT000049","PT000050","PT000271","PT000279"))
 def snippy_core(list_of_genomes:List[String]) = {
 
@@ -1491,8 +1486,6 @@ def snippy_core(list_of_genomes:List[String]) = {
   %("bash", "-c", cmd_string)
 
 }
-
-
 
 
 def SNPtable() = {
@@ -1686,7 +1679,6 @@ var output =  analyse_all_genomes("G04868")
 
 //////////
 
-#!/usr/bin/env amm
 
 /*
 Step5
@@ -1749,7 +1741,6 @@ cp.into(pwd/(genomeName + "-done")/(genomeName + "_analysis")/genomeName, pwd/up
 
 ////////////
 
-#!/usr/bin/env amm
 
 /*
  Step6 - FastQC analysis
@@ -1807,7 +1798,6 @@ for (f <- all_trimmed_paired_files) {
 }
 /////////
 
-#!/usr/bin/env amm
 
 /*
  Step6 - FastQC analysis
