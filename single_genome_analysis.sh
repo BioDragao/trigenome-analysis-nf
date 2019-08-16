@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # gzip these files <<<<<
 
 gzip -dc G04868_R1.fastq.gz > G04868_R1.fastq
