@@ -380,21 +380,16 @@ java -Xmx4g -jar /opt/snpEff/snpEff.jar -no-downstream -no-upstream -v -c /opt/s
 
 runSnpeff_result.println { it.trim() }
 
-
-
-
 /*
 ###############
 velveth_assembly
 ###############
 */
 
-
-
-process bashShell {
+process runVelvetH41 {
 
     output:
-    stdout bashShell_result
+    stdout runVelvetH41_result
 
     shell:
 
@@ -404,9 +399,7 @@ velveth G04868_41 41 -fastq -shortPaired  G04868_1_trimmed_paired.fastq G04868_1
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
+runVelvetH41_result.println { it.trim() }
 
 
 /*
@@ -416,10 +409,10 @@ velvetg_produce_graph
 */
 
 
-process bashShell {
+process runVelvetG41 {
 
     output:
-    stdout bashShell_result
+    stdout runVelvetG41_result
 
     shell:
 
@@ -429,11 +422,7 @@ velvetg G04868_41 -exp_cov auto -cov_cutoff auto
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
-
-
+runVelvetG41_result.println { it.trim() }
 
 /*
 ###############
@@ -442,10 +431,10 @@ assemblathon_stats
 */
 
 
-process bashShell {
+process runAssemblathon41 {
 
     output:
-    stdout bashShell_result
+    stdout runAssemblathon41_result
 
     shell:
 
@@ -454,9 +443,7 @@ assemblathon_stats.pl ./G04868_41/contigs.fa
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
+runAssemblathon41_result.println { it.trim() }
 
 
 /*
@@ -465,11 +452,10 @@ velveth_assembly
 ###############
 */
 
-
-process bashShell {
+process runVelvetH49 {
 
     output:
-    stdout bashShell_result
+    stdout runVelvetH49_result
 
     shell:
 
@@ -480,8 +466,7 @@ velveth G04868_49 49 -fastq -shortPaired  G04868_1_trimmed_paired.fastq G04868_1
     """
 }
 
-bashShell_result.println { it.trim() }
-
+runVelvetH49_result.println { it.trim() }
 
 
 /*
@@ -492,7 +477,7 @@ velvetg_produce_graph
 
 
 
-process bashShell {
+process runVelvetG49 {
 
     output:
     stdout bashShell_result
@@ -506,7 +491,7 @@ velvetg G04868_49 -exp_cov auto -cov_cutoff auto
     """
 }
 
-bashShell_result.println { it.trim() }
+runVelvetG49_result.println { it.trim() }
 
 
 
@@ -517,10 +502,10 @@ assemblathon_stats
 */
 
 
-process bashShell {
+process runAssemblathon49 {
 
     output:
-    stdout bashShell_result
+    stdout runAssemblathon49_result
 
     shell:
 
@@ -531,8 +516,7 @@ assemblathon_stats.pl ./G04868_49/contigs.fa
     """
 }
 
-bashShell_result.println { it.trim() }
-
+runAssemblathon49_result.println { it.trim() }
 
 
 /*
@@ -542,10 +526,10 @@ velveth_assembly
 */
 
 
-process bashShell {
+process runVelvetH55 {
 
     output:
-    stdout bashShell_result
+    stdout runVelvetH55_result
 
     shell:
 
@@ -556,7 +540,7 @@ velveth G04868_55 55 -fastq -shortPaired  G04868_1_trimmed_paired.fastq G04868_1
     """
 }
 
-bashShell_result.println { it.trim() }
+runVelvetH55_result.println { it.trim() }
 
 
 /*
@@ -567,10 +551,10 @@ velvetg_produce_graph
 
 
 
-process bashShell {
+process runVelvetG55 {
 
     output:
-    stdout bashShell_result
+    stdout runVelvetG55_result
 
     shell:
 
@@ -581,7 +565,8 @@ velvetg G04868_55 -exp_cov auto -cov_cutoff auto
     """
 }
 
-bashShell_result.println { it.trim() }
+runVelvetG55_result.println { it.trim() }
+
 
 
 
@@ -591,78 +576,37 @@ assemblathon_stats
 ###############
 */
 
-process bashShell {
+
+process runAssemblathon55 {
 
     output:
-    stdout bashShell_result
+    stdout runAssemblathon55_result
 
     shell:
 
     """
 
-assemblathon_stats.pl ./G04868_55/contigs.fa
-    """
+assemblathon_stats.pl ./G04868_50/contigs.fa
 
+    """
 }
 
-bashShell_result.println { it.trim() }
-
-
-process bashShell {
-
-    output:
-    stdout bashShell_result
-
-    shell:
-
-    """
-
-assemblathon_stats.pl ./G04868_41/contigs.fa
-    """
-
-}
-
-bashShell_result.println {it.trim()}
-
-
-process bashShell {
-
-    output:
-    stdout bashShell_result
-
-    shell:
-
-    """
-
-assemblathon_stats.pl ./G04868_49/contigs.fa
-    """
-
-}
-
-bashShell_result.println {it.trim()}
-
-
-process bashShell {
-
-    output:
-    stdout bashShell_result
-
-    shell:
-
-    """
-
-assemblathon_stats.pl ./G04868_55/contigs.fa
-    """
-
-}
-
-bashShell_result.println {it.trim()}
+runAssemblathon55_result.println { it.trim() }
 
 /*
 ###############
-NOTE: Highest quality k_mer : 49
+Find the highest quality k-mer using the assemblathon-results
 ###############
 */
+
+
+/*
+NOTE: Highest quality k_mer : 49
+*/
+
+assemblathon_stats.pl ./G04868_41/contigs.fa
+assemblathon_stats.pl ./G04868_49/contigs.fa
+assemblathon_stats.pl ./G04868_55/contigs.fa
 
 
 /*
@@ -671,10 +615,10 @@ abacas_align_contigs
 ###############
 */
 
-process bashShell {
+process runAbacas {
 
     output:
-    stdout bashShell_result
+    stdout runAbacas_result
 
     shell:
 
@@ -685,7 +629,7 @@ cd G04868_49 &&  cp ../NC000962_3.fasta ./ && abacas.pl -r ../NC000962_3.fasta -
 
 }
 
-bashShell_result.println {it.trim()}
+runAbacas_result.println {it.trim()}
 
 /*
 ###############
@@ -693,10 +637,10 @@ prokka_annotation
 ###############
 */
 
-process bashShell {
+process runProkka {
 
     output:
-    stdout bashShell_result
+    stdout runProkka_result
 
     shell:
 
@@ -707,7 +651,7 @@ cd ./G04868_49 && prokka --outdir ./G04868_prokka --prefix G04868 contigs.fa_NC0
 
 }
 
-bashShell_result.println {it.trim()}
+runProkka_result.println {it.trim()}
 
 
 /*
@@ -716,44 +660,24 @@ gzip_compression
 ###############
 */
 
-process bashShell {
+process runGzipCompression {
 
     output:
-    stdout bashShell_result
+    stdout runGzipCompression_result
 
     shell:
 
     """
 
 gzip -c G04868_1.fastq > G04868_1.fastq.gz
-    """
-
-}
-
-bashShell_result.println {it.trim()}
-
-
-/*
-###############
-gzip_compression
-###############
-*/
-
-process bashShell {
-
-    output:
-    stdout bashShell_result
-
-    shell:
-
-    """
 
 gzip -c G04868_2.fastq > G04868_2.fastq.gz
     """
 
 }
 
-bashShell_result.println {it.trim()}
+runGzipCompression_result.println {it.trim()}
+
 
 
 /*
@@ -762,21 +686,20 @@ snippy_command
 ###############
 */
 
-process bashShell {
+process runSnippy {
 
     output:
-    stdout bashShell_result
+    stdout runSnippy_result
 
     shell:
 
     """
-
 snippy --cpus 4 --outdir G04868 --ref ./NC000962_3.gbk --R1 ./G04868_1.fastq.gz --R2 ./G04868_2.fastq.gz
     """
 
 }
 
-bashShell_result.println {it.trim()}
+runSnippy_result.println {it.trim()}
 
 
 /*
@@ -785,10 +708,10 @@ SNPtable
 ###############
 */
 
-process bashShell {
+process runSnpTable {
 
     output:
-    stdout bashShell_result
+    stdout runSnpTable_result
 
     shell:
 
@@ -799,7 +722,7 @@ SNPtable_filter_Mtb.R core.tab
 
 }
 
-bashShell_result.println {it.trim()}
+runSnpTable_result.println {it.trim()}
 
 
 /*
@@ -808,10 +731,10 @@ HammingFasta
 ###############
 */
 
-process bashShell {
+process runHammingFasta {
 
     output:
-    stdout bashShell_result
+    stdout runHammingFasta_result
 
     shell:
 
@@ -822,7 +745,7 @@ HammingFasta.R coreSNP_alignment_filtered.fas
 
 }
 
-bashShell_result.println {it.trim()}
+runHammingFasta_result.println {it.trim()}
 
 /*
 ###############
