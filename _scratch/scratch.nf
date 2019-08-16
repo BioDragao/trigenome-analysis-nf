@@ -53,10 +53,10 @@ gzip these files
 ################
 */
 
-process bashShell {
+process runGzip {
 
     output:
-    stdout bashShell_result
+    stdout runGzip_result
 
     shell:
 
@@ -68,7 +68,7 @@ gzip -dc G04868_R2.fastq.gz > G04868_R2.fastq
     """
 }
 
-bashShell_result.println { it.trim() }
+runGzip_result.println { it.trim() }
 
 
 
@@ -81,10 +81,10 @@ trimmomatic
 
 
 
-process bashShell {
+process runTrimmomatic {
 
     output:
-    stdout bashShell_result
+    stdout runTrimmomatic_result
 
     shell:
 
@@ -95,7 +95,7 @@ java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_1.fastq 
     """
 }
 
-bashShell_result.println { it.trim() }
+runTrimmomatic_result.println { it.trim() }
 
 
 
@@ -106,10 +106,10 @@ bwa_index_reference_genome
 ###############
 */
 
-process bashShell {
+process runBwaIndex {
 
     output:
-    stdout bashShell_result
+    stdout runBwaIndex_result
 
     shell:
 
@@ -120,7 +120,7 @@ bwa index NC000962_3.fasta
     """
 }
 
-bashShell_result.println { it.trim() }
+runBwaIndex_result.println { it.trim() }
 
 
 
@@ -132,10 +132,10 @@ map_and_generate_sam_file
 
 
 
-process bashShell {
+process runBwaMapping {
 
     output:
-    stdout bashShell_result
+    stdout runBwaMapping_result
 
     shell:
 
@@ -144,8 +144,7 @@ bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_1
     """
 }
 
-bashShell_result.println { it.trim() }
-
+runBwaMapping_result.println { it.trim() }
 
 
 /*
@@ -155,11 +154,10 @@ samtools_faidx_reference_genome
 */
 
 
-
-process bashShell {
+process runSamtoolsFaidx {
 
     output:
-    stdout bashShell_result
+    stdout runSamtoolsFaidx_result
 
     shell:
 
@@ -168,12 +166,7 @@ samtools faidx NC000962_3.fasta
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
-
-
-
+runSamtoolsFaidx_result.println { it.trim() }
 
 
 /*
@@ -184,10 +177,10 @@ convert_sam_file_to_bam_file
 
 
 
-process bashShell {
+process runSamToBam {
 
     output:
-    stdout bashShell_result
+    stdout runSamToBam_result
 
     shell:
 
@@ -196,7 +189,7 @@ samtools view -bt NC000962_3.fasta.fai G04868.sam > G04868.bam
     """
 }
 
-bashShell_result.println { it.trim() }
+runSamToBam_result.println { it.trim() }
 
 
 
@@ -207,10 +200,10 @@ sort_bam_file
 */
 
 
-process bashShell {
+process runSortBam {
 
     output:
-    stdout bashShell_result
+    stdout runSortBam_result
 
     shell:
 
@@ -219,10 +212,7 @@ samtools sort G04868.bam -o G04868.sorted.bam
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
-
+runSortBam_result.println { it.trim() }
 
 
 /*
@@ -232,10 +222,10 @@ samtools_index_sorted_bam
 */
 
 
-process bashShell {
+process runSamtoolsIndex {
 
     output:
-    stdout bashShell_result
+    stdout runSamtoolsIndex_result
 
     shell:
 
@@ -245,7 +235,7 @@ samtools index G04868.sorted.bam
     """
 }
 
-bashShell_result.println { it.trim() }
+runSamtoolsIndex_result.println { it.trim() }
 
 
 
@@ -257,10 +247,10 @@ mapping_statistics
 ###############
 */
 
-process bashShell {
+process runSamtoolsStat {
 
     output:
-    stdout bashShell_result
+    stdout runSamtoolsStat_result
 
     shell:
 
@@ -271,7 +261,7 @@ samtools flagstat G04868.sorted.bam > G04868_stats.txt
     """
 }
 
-bashShell_result.println { it.trim() }
+runSamtoolsStat_result.println { it.trim() }
 
 
 /*
@@ -281,11 +271,10 @@ samtools_mpileup
 */
 
 
-
-process bashShell {
+process runSamtoolsMpileup {
 
     output:
-    stdout bashShell_result
+    stdout runSamtoolsMpileup_result
 
     shell:
 
@@ -295,10 +284,7 @@ samtools mpileup -Q 23 -d 2000 -C 50 -ugf NC000962_3.fasta G04868.sorted.bam | b
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
-
+runSamtoolsMpileup_result.println { it.trim() }
 
 /*
 ###############
@@ -307,10 +293,10 @@ vcfutils_filter
 */
 
 
-process bashShell {
+process runVcfutils {
 
     output:
-    stdout bashShell_result
+    stdout runVcfutils_result
 
     shell:
 
@@ -321,7 +307,7 @@ vcfutils.pl varFilter -d 10 -D 2000 G04868.raw.vcf > G04868.filt.vcf
     """
 }
 
-bashShell_result.println { it.trim() }
+runVcfutils_result.println { it.trim() }
 
 
 
@@ -333,10 +319,10 @@ bgzip_filt_file
 
 
 
-process bashShell {
+process runBgzip {
 
     output:
-    stdout bashShell_result
+    stdout runBgzip_result
 
     shell:
 
@@ -347,10 +333,7 @@ bgzip -c G04868.filt.vcf > G04868.filt.vcf.gz
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
-
+runBgzip_result.println { it.trim() }
 
 /*
 ###############
@@ -358,10 +341,10 @@ run_tabix
 ###############
 */
 
-process bashShell {
+process runTabix {
 
     output:
-    stdout bashShell_result
+    stdout runTabix_result
 
     shell:
 
@@ -371,9 +354,7 @@ tabix -p vcf G04868.filt.vcf.gz
     """
 }
 
-bashShell_result.println { it.trim() }
-
-
+runTabix_result.println { it.trim() }
 
 
 /*
@@ -384,10 +365,10 @@ snpEff
 
 
 
-process bashShell {
+process runSnpeff {
 
     output:
-    stdout bashShell_result
+    stdout runSnpeff_result
 
     shell:
 
@@ -397,7 +378,7 @@ java -Xmx4g -jar /opt/snpEff/snpEff.jar -no-downstream -no-upstream -v -c /opt/s
     """
 }
 
-bashShell_result.println { it.trim() }
+runSnpeff_result.println { it.trim() }
 
 
 
