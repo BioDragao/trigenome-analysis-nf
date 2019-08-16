@@ -59,8 +59,8 @@ process downloadGenomes {
     shell:
 
     """
- rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_1.fastq.gz . -vv
- rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_2.fastq.gz . -vv
+rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_1.fastq.gz . -vv
+rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_2.fastq.gz . -vv
     """
 }
 
@@ -108,7 +108,14 @@ process runTrimmomatic {
 
     """
 
-java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_1.fastq G04868_2.fastq G04868_1_trimmed_paired.fastq G04868_1_trimmed_unpaired.fastq G04868_2_trimmed_paired.fastq G04868_2_trimmed_unpaired.fastq LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 \
+G04868_1.fastq \
+G04868_2.fastq \
+G04868_1_trimmed_paired.fastq \
+G04868_1_trimmed_unpaired.fastq \
+G04868_2_trimmed_paired.fastq \
+G04868_2_trimmed_unpaired.fastq \
+LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
 
     """
 }
