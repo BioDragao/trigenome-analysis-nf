@@ -43,6 +43,30 @@ process groovyCode {
 
 
 
+
+
+/*
+################
+download genomes
+################
+*/
+
+process downloadGenomes {
+
+    output:
+    stdout downloadGenomes_result
+
+    shell:
+
+    """
+ rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_1.fastq.gz . -vv
+ rclone copy onedrive-emab:G04868-done/G04868_analysis/G04868_2.fastq.gz . -vv
+    """
+}
+
+downloadGenomes_result.println { it.trim() }
+
+
 /*
 ################
 gzip these files
