@@ -31,17 +31,20 @@
 // */
 
 Channel
-    .fromFilePairs('/my/data/SRR*_{1,2}.fastq')
+    .fromFilePairs('../_resources/G04868_scratch/*_R{1,2}.fastq.gz')
     .println()
+
+
+
 
 
 /*
 ################
-gzip these files
+echo file names
 ################
 */
 
-process runGzip {
+process echoFileNames {
 
     output:
     stdout runGzip_result
@@ -57,6 +60,35 @@ gzip -dc G04868_R2.fastq.gz > G04868_R2.fastq
 }
 
 runGzip_result.println { it.trim() }
+
+
+
+
+
+
+
+/*
+################
+gzip these files
+################
+*/
+
+// process runGzip {
+
+//     output:
+//     stdout runGzip_result
+
+//     shell:
+
+//     """
+// gzip -dc G04868_R1.fastq.gz > G04868_R1.fastq
+
+// gzip -dc G04868_R2.fastq.gz > G04868_R2.fastq
+
+//     """
+// }
+
+// runGzip_result.println { it.trim() }
 
 
 
