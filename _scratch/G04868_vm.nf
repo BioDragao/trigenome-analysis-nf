@@ -30,11 +30,9 @@
 // ################
 // */
 
-Channel
-    .fromFilePairs('../_resources/G04868_scratch/*_R{1,2}.fastq.gz')
-    .println()
-
-
+// gzippedFiles = Channel
+//     .fromFilePairs('../_resources/G04868_scratch/*_R{1,2}.fastq.gz')
+//     .println()
 
 
 
@@ -44,23 +42,17 @@ echo file names
 ################
 */
 
+
+gzipped = Channel.fromPath('../_resources/G04868_scratch/*.fastq.gz')
+
 process echoFileNames {
 
-    output:
-    stdout runGzip_result
+    input:
+    val x from gzipped
 
-    shell:
-
-    """
-gzip -dc G04868_R1.fastq.gz > G04868_R1.fastq
-
-gzip -dc G04868_R2.fastq.gz > G04868_R2.fastq
-
-    """
+    exec:
+    println "$x"
 }
-
-runGzip_result.println { it.trim() }
-
 
 
 
