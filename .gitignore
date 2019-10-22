@@ -1,2 +1,4 @@
 _resources
 _scratch/.nextflow.log.*
+/_scratch/.nextflow
+/_scratch/.nextflow.log
