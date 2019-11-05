@@ -2,20 +2,6 @@
 filePairs  = Channel.fromFilePairs('./*R{1,2}.fastq.gz')
 
 
-//process echoFileNames {
-//
-//    echo true
-//
-//    input:
-//    val file_list from filePairs
-//
-//    """
-//   echo ${file_list[0]}
-//   echo ${file_list[1][0]}
-//   echo ${file_list[1][1]}
-//   """
-//}
-
 process gzipFiles {
 
     echo true
@@ -23,13 +9,15 @@ process gzipFiles {
     input:
     val fileList from filePairs
 
-
     script:
-    oldName = fileList[1][0]
-    newName = oldName.toString().split("\\.")[0] + ".fastq"
+    firstFileOldName = fileList[1][0]
+    firstFileNewName = firstFileOldName.toString().split("\\.")[0] + ".fastq"
+
+    secondFileOldName = fileList[1][1]
+    secondFileNewName = secondFileOldName.toString().split("\\.")[0] + ".fastq"
 
     """
-    echo ${oldName}
-    echo ${newName}
+   gzip -dc ${firstFileOldName}   >  ${firstFileNewName}
+   gzip -dc ${secondFileOldName}  >  ${secondFileNewName}
     """
 }
