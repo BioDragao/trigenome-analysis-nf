@@ -1,5 +1,4 @@
-
-filePairs  = Channel.fromFilePairs('./*R{1,2}.fastq.gz')
+filePairs = Channel.fromFilePairs('./*_R{1,2}.fastq.gz')
 
 
 process gzipFiles {
@@ -7,17 +6,26 @@ process gzipFiles {
     echo true
 
     input:
+
     val fileList from filePairs
 
+    // TODO implement the <output> to pass the unzipped files to a channel in the pipeline
+
     script:
-    firstFileOldName = fileList[1][0]
-    firstFileNewName = firstFileOldName.toString().split("\\.")[0] + ".fastq"
 
-    secondFileOldName = fileList[1][1]
-    secondFileNewName = secondFileOldName.toString().split("\\.")[0] + ".fastq"
+    for (int i = 0; i < fileList.size(); i++) {
+        oldR1Name = fileList[i + 1][0]
+        newR1Name = oldR1Name.toString().split("\\.")[0]
 
-    """
-   gzip -dc ${firstFileOldName}   >  ${firstFileNewName}
-   gzip -dc ${secondFileOldName}  >  ${secondFileNewName}
-    """
+        oldR2Name = fileList[i + 1][1]
+        newR2Name = oldR2Name.toString().split("\\.")[0]
+
+        return """
+            gzip -dc ${oldR1Name} > ${newR1Name}.fastq
+
+            gzip -dc ${oldR2Name} > ${newR2Name}.fastq
+            """
+    }
 }
+
+
