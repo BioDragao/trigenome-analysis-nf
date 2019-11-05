@@ -1,5 +1,4 @@
-
-filePairs  = Channel.fromFilePairs('./*R{1,2}.fastq.gz')
+filePairs = Channel.fromFilePairs('./*_R{1,2}.fastq.gz')
 
 
 process gzipFiles {
@@ -7,17 +6,45 @@ process gzipFiles {
     echo true
 
     input:
+
     val fileList from filePairs
 
-    script:
-    firstFileOldName = fileList[1][0]
-    firstFileNewName = firstFileOldName.toString().split("\\.")[0] + ".fastq"
 
-    secondFileOldName = fileList[1][1]
-    secondFileNewName = secondFileOldName.toString().split("\\.")[0] + ".fastq"
+    output:
+
+    file "${fileList[1][0].toString().split(" \\.")[0]}.fastq" into unzippedFiles
+
+
+    script:
 
     """
-   gzip -dc ${firstFileOldName}   >  ${firstFileNewName}
-   gzip -dc ${secondFileOldName}  >  ${secondFileNewName}
+    gzip -dc ${fileList[1][0]} > ${fileList[1][0].toString().split("\\.")[0]}.fastq
+
+    gzip -dc ${fileList[1][1]} > ${fileList[1][1].toString().split("\\.")[0]}.fastq
+
     """
 }
+
+
+unzippedFiles
+        .flatMap()
+        .subscribe { println "${it.name}" }
+
+
+//
+//process splitLetters {
+//
+//    echo true
+//
+//    input:
+//
+//    val file from unzippedFiles
+//
+//    script:
+//
+//    """
+//    echo ${file}
+//    """
+//}
+
+
