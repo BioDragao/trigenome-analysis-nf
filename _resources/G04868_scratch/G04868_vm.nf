@@ -1,17 +1,19 @@
 
 filePairs  = Channel.fromFilePairs('./*R{1,2}.fastq.gz')
 
-process bar {
+
+process gzipFiles {
 
     echo true
 
     input:
-    val file_list from filePairs
+    val fileList from filePairs
 
-   """
-   echo ${file_list[0]}
-   echo ${file_list[1][0]}
-   echo ${file_list[1][1]}
-   """
+
+    script:
+    oldName = fileList[0]
+
+    """
+    echo ${oldName}
+    """
 }
-
