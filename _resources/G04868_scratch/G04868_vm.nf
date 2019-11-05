@@ -1,4 +1,5 @@
-filePairs = Channel.fromFilePairs('./*_R{1,2}.fastq.gz')
+/*
+gzippedFilePairs = Channel.fromFilePairs('./*_R{1,2}.fastq.gz')
 
 
 process gzipFiles {
@@ -7,7 +8,7 @@ process gzipFiles {
 
     input:
 
-    val fileList from filePairs
+    val fileList from gzippedFilePairs
 
     // TODO implement the <output> to pass the unzipped files to a channel in the pipeline
 
@@ -28,4 +29,4 @@ process gzipFiles {
     }
 }
 
-
+*/
