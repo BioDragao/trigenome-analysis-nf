@@ -9,42 +9,23 @@ process gzipFiles {
 
     val fileList from filePairs
 
-
-    output:
-
-    file "${fileList[1][0].toString().split(" \\.")[0]}.fastq" into unzippedFiles
-
+    // TODO implement the <output> to pass the unzipped files to a channel in the pipeline
 
     script:
 
-    """
-    gzip -dc ${fileList[1][0]} > ${fileList[1][0].toString().split("\\.")[0]}.fastq
+    for (int i = 0; i < fileList.size(); i++) {
+        oldR1Name = fileList[i + 1][0]
+        newR1Name = oldR1Name.toString().split("\\.")[0]
 
-    gzip -dc ${fileList[1][1]} > ${fileList[1][1].toString().split("\\.")[0]}.fastq
+        oldR2Name = fileList[i + 1][1]
+        newR2Name = oldR2Name.toString().split("\\.")[0]
 
-    """
+        return """
+            gzip -dc ${oldR1Name} > ${newR1Name}.fastq
+
+            gzip -dc ${oldR2Name} > ${newR2Name}.fastq
+            """
+    }
 }
-
-
-unzippedFiles
-        .flatMap()
-        .subscribe { println "${it.name}" }
-
-
-//
-//process splitLetters {
-//
-//    echo true
-//
-//    input:
-//
-//    val file from unzippedFiles
-//
-//    script:
-//
-//    """
-//    echo ${file}
-//    """
-//}
 
 
