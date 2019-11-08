@@ -101,9 +101,39 @@ process bwaIndexReferenceGenome {
 }
 
 ////======= map_and_generate_sam_file =======
-//// TODO
+//// DONE
+
+
+fastqFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}_trimmed_paired.fastq')
+referenceGenomeCh = Channel.fromPath("./NC000962_3.fasta")
+
+
 //        bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired.fastq > G04868.sam
-//
+
+process mapAndGenerateSamFile {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val refGenome from referenceGenomeCh
+    val fastqFiles from fastqFilePairsCh
+
+// TODO this is repeated, get value without consuming the content of channel in above usage
+
+    script:
+//        bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M NC000962_3.fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired.fastq > G04868.sam
+
+    samFileName = fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[0]  + "_" + fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[1]  + ".sam"
+    fastqPairedFile1 = fastqFiles[1][0]
+    fastqPairedFile2 = fastqFiles[1][1]
+
+    """
+    bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M ${refGenome} ${fastqPairedFile1} ${fastqPairedFile2} > ${samFileName}
+    """
+}
+
 //
 //======== samtools_faidx_reference_genome =======
 // DONE
@@ -134,33 +164,33 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-
-genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
-referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
-
-process convertSamFileToBamFile {
-//    conda 'bwa'
-//    conda './tese.yaml'
-
-    echo true
-
-    input:
-    val genomeFromPath from genomeFromPathCh
-    val referenceGenomeFai from referenceGenomeFaiCh
-
-// TODO this is repeated, get value without consuming the content of channel in above usage
-
-    script:
-//        samtools view - bt NC000962_3.fasta.fai G04868.sam > G04868.bam
-
-    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
-    samFile = genomeName + ".sam"
-    bamFile = genomeName + ".bam"
-
-    """
-    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
-    """
-}
+//
+//genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
+//referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
+//
+//process convertSamFileToBamFile {
+////    conda 'bwa'
+////    conda './tese.yaml'
+//
+//    echo true
+//
+//    input:
+//    val genomeFromPath from genomeFromPathCh
+//    val referenceGenomeFai from referenceGenomeFaiCh
+//
+//// TODO this is repeated, get value without consuming the content of channel in above usage
+//
+//    script:
+////        samtools view - bt NC000962_3.fasta.fai G04868.sam > G04868.bam
+//
+//    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
+//    samFile = genomeName + ".sam"
+//    bamFile = genomeName + ".bam"
+//
+//    """
+//    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
+//    """
+//}
 
 
 //
