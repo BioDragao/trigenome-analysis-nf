@@ -80,25 +80,25 @@ process trimmomatic {
 }
 
 //====== bwa index ============
+// DONE
 
+referenceGenome = Channel.fromPath("./NC000962_3.fasta")
 
-//referenceGenome = Channel.fromPath("./NC000962_3.fasta")
-//
-//process bwaIndexReferenceGenome {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val refGenome from referenceGenome
-//
-//    script:
-//
-//    """
-//    echo bwa index ${refGenome}
-//    """
-//}
+process bwaIndexReferenceGenome {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val refGenome from referenceGenome
+
+    script:
+
+    """
+    bwa index ${refGenome}
+    """
+}
 
 //======= map_and_generate_sam_file =======
 //
