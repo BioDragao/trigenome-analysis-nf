@@ -161,41 +161,36 @@ process samtoolsFaidxReferenceGenome {
 
 
 //======== convert_sam_file_to_bam_file =======
-//// TODO
-//
-//
-//
-//genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
-//referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
-//
-//process convertSamFileToBamFile {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val genomeFromPath from genomeFromPathCh
-//    val referenceGenomeFai from referenceGenomeFaiCh
-//
-//// TODO this is repeated, get value without consuming the content of channel in above usage
-//
-//    script:
-////        samtools view - bt NC000962_3.fasta.fai G04868.sam > G04868.bam
-//
-//    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
-//    samFile = genomeName + ".sam"
-//    bamFile = genomeName + ".bam"
-//
-//    """
-//    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
-//    """
-//}
+// TODO this needs to be connected via channel to the output sam file of mapAndGenerateSamFile job
 
 
-//
-//
-//
+genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
+referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
+
+process convertSamFileToBamFile {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val genomeFromPath from genomeFromPathCh
+    val referenceGenomeFai from referenceGenomeFaiCh
+
+// TODO this is repeated, get value without consuming the content of channel in above usage
+
+    script:
+//        samtools view - bt NC000962_3.fasta.fai G04868.sam > G04868.bam
+
+    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
+    samFile = "./" + genomeName + ".sam"
+    bamFile = "./" + genomeName + ".bam"
+
+    """
+    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
+    """
+}
+
 //
 //======== sort_bam_file =======
 //// TODO
