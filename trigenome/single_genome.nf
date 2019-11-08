@@ -102,36 +102,34 @@ process bwaIndexReferenceGenome {
 
 //======= map_and_generate_sam_file =======
 //
-//        bwa mem - R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3 . fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired . fastq > G04868.sam
+//        bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired.fastq > G04868.sam
 //
 //
 //======== samtools_faidx_reference_genome =======
-//
-//
-//        samtools faidx NC000962_3 . fasta
+// DONE
+
+
+referenceGenome = Channel.fromPath("./NC000962_3.fasta")
+
+process samtoolsFaidxReferenceGenome {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val refGenome from referenceGenome
 
 // TODO this is repeated, get value without consuming the content of channel in above usage
-//referenceGenome = Channel.fromPath("./NC000962_3.fasta")
-//
-//process samtoolsFaidxReferenceGenome {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val refGenome from referenceGenome
-//
-//    script:
-//
-//    """
-//    echo samtools faidx  ${refGenome}
-//    """
-//}
-//
-//
-//
-//
+
+    script:
+
+    """
+    samtools faidx  ${refGenome}
+    """
+}
+
+
 //======== convert_sam_file_to_bam_file =======
 //
 //
