@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 rm .nextflow.*
-nextflow --with-report single_genome.nf
+nextflow  single_genome.nf  -with-report single_genome.html
 
