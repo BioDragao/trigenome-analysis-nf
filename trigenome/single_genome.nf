@@ -1,6 +1,12 @@
-//====== globals ============
+//====== genome files needed ============
+// NOTE
 
-
+/*
+G04868_L003_R1.fastq.gz
+G04868_L003_R2.fastq.gz
+NC000962_3.fasta
+NC000962_3.gbk
+*/
 
 //====== gzip ============
 // DONE
@@ -15,8 +21,6 @@ process gzipDecompressFiles {
     input:
 
     val fileList from gzippedFilePairs
-
-    // TODO implement the <output> to pass the unzipped files to a channel in the pipeline
 
     script:
 
@@ -38,6 +42,7 @@ process gzipDecompressFiles {
 
 //====== trimmomatic ============
 // DONE
+
 fastqFilePairs = Channel.fromFilePairs('G04868_L003_R{1,2}.fastq.gz')
 
 
@@ -49,7 +54,6 @@ process trimmomatic {
 
     val fileList from fastqFilePairs
 
-    // TODO implement the <output> to pass the unzipped files to a channel in the pipeline
 
     script:
 
@@ -98,9 +102,8 @@ process bwaIndexReferenceGenome {
     """
 }
 
-////======= map_and_generate_sam_file =======
-//// DONE
-
+//======= map_and_generate_sam_file =======
+// DONE
 
 fastqFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}_trimmed_paired.fastq')
 referenceGenomeCh = Channel.fromPath("./NC000962_3.fasta")
@@ -116,8 +119,6 @@ process mapAndGenerateSamFile {
     val refGenome from referenceGenomeCh
     val fastqFiles from fastqFilePairsCh
 
-// TODO this is repeated, get value without consuming the content of channel in above usage
-
     script:
 
     samFileName = fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[0]  + "_" + fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[1]  + ".sam"
@@ -129,7 +130,6 @@ process mapAndGenerateSamFile {
     """
 }
 
-//
 //======== samtools_faidx_reference_genome =======
 // DONE
 
@@ -145,8 +145,6 @@ process samtoolsFaidxReferenceGenome {
     input:
     val refGenome from referenceGenome
 
-// TODO this is repeated, get value without consuming the content of channel in above usage
-
     script:
 
     """
@@ -155,37 +153,33 @@ process samtoolsFaidxReferenceGenome {
 }
 
 
-////======== convert_sam_file_to_bam_file =======
-//// TODO this needs to be connected via channel to the output sam file of mapAndGenerateSamFile job
-//
-//
-//genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
-//referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
-//
-//process convertSamFileToBamFile {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val genomeFromPath from genomeFromPathCh
-//    val referenceGenomeFai from referenceGenomeFaiCh
-//
-//// TODO this is repeated, get value without consuming the content of channel in above usage
-//
-//    script:
-//
-//    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
-//    samFile = "./" + genomeName + ".sam"
-//    bamFile = "./" + genomeName + ".bam"
-//
-//    """
-//    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
-//    """
-//}
+//======== convert_sam_file_to_bam_file =======
 
-//
+genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
+referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
+
+process convertSamFileToBamFile {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val genomeFromPath from genomeFromPathCh
+    val referenceGenomeFai from referenceGenomeFaiCh
+
+
+    script:
+
+    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
+    samFile = "./" + genomeName + ".sam"
+    bamFile = "./" + genomeName + ".bam"
+
+    """
+    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
+    """
+}
+
 //======== sort_bam_file =======
 //// TODO
 //
@@ -317,13 +311,6 @@ process samtoolsFaidxReferenceGenome {
 //
 //
 //======== prokka_annotation =======
-//// TODO
-//
-//
-//
-//
-//
-//======== gzip_compression =======
 //// TODO
 //
 //
