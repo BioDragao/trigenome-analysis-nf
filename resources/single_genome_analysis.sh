@@ -8,7 +8,7 @@ gzip -dc G04868_L003_R2.fastq.gz >G04868_L003_R2.fastq
 
 # trimmomatic <<<<<
 
-java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_L003_1.fastq G04868_L003_2.fastq G04868_L003_1_trimmed_paired.fastq G04868_L003_1_trimmed_unpaired.fastq G04868_L003_2_trimmed_paired.fastq G04868_L003_2_trimmed_unpaired.fastq LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_L003_R1.fastq G04868_L003_R2.fastq G04868_L003_R1_trimmed_paired.fastq G04868_L003_R1_trimmed_unpaired.fastq G04868_L003_R2_trimmed_paired.fastq G04868_L003_R2_trimmed_unpaired.fastq LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
 
 # bwa_index_reference_genome <<<<<
 
