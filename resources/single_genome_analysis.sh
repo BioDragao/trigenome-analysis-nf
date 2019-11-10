@@ -24,11 +24,11 @@ samtools faidx NC000962_3.fasta
 # map_and_generate_sam_file <<<<<
 # DONE
 
-bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_R1_trimmed_paired.fastq G04868_L003_R2_trimmed_paired.fastq >G04868_L003.sam
+bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_R1_trimmed_paired.fastq G04868_L003_R2_trimmed_paired.fastq > G04868_L003.sam
 
 # convert_sam_file_to_bam_file <<<<<
 
-samtools view -bt NC000962_3.fasta.fai G04868_L003.sam >G04868_L003.bam
+samtools view -bt NC000962_3.fasta.fai G04868_L003.sam > G04868_L003.bam
 
 # sort_bam_file <<<<<
 

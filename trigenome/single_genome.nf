@@ -8,7 +8,11 @@ NC000962_3.fasta
 NC000962_3.gbk
 */
 
-// TODO rely on the input param to have global variabel of genomeName
+//====== nf pipeline parameters ============
+
+params.genomeName = "G04868_L003"
+params.refGenomeFasta = "NC000962_3.fasta"
+params.refGenomeGbk = "NC000962_3.gbk"
 
 //====== gzip decompress ============
 // DONE
@@ -110,32 +114,38 @@ process bwaIndexReferenceGenome {
 }
 
 */
-////======== samtools_faidx_reference_genome =======
-//// DONE
-//
-//
-//referenceGenome = Channel.fromPath("./NC000962_3.fasta")
-//
-//process samtoolsFaidxReferenceGenome {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val refGenome from referenceGenome
-//
-//    script:
-//
-//    """
-//    samtools faidx  ${refGenome}
-//    """
-//}
-//
-//
+
+//======== samtools_faidx_reference_genome =======
+// DONE
+
+/*
+
+referenceGenome = Channel.fromPath("./NC000962_3.fasta")
+
+process samtoolsFaidxReferenceGenome {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val refGenome from referenceGenome
+
+    script:
+
+    """
+    samtools faidx  ${refGenome}
+    """
+}
+
+*/
+
 
 //======= map_and_generate_sam_file =======
 // DONE
+
+// TODO nextflow seems to consider this output as an error but it actually works fine
+
 
 fastqFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}_trimmed_paired.fastq')
 referenceGenomeCh = Channel.fromPath("./NC000962_3.fasta")
@@ -146,10 +156,14 @@ process mapAndGenerateSamFile {
 //    conda './tese.yaml'
 
     echo true
+//    errorStrategy 'ignore'
 
     input:
     val refGenome from referenceGenomeCh
     val fastqFiles from fastqFilePairsCh
+
+    output:
+    file "G04868_L003.sam" into samFileCh
 
     script:
 
@@ -158,41 +172,41 @@ process mapAndGenerateSamFile {
     fastqPairedFile2 = fastqFiles[1][1]
 
     """
-    bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M ${refGenome} ${fastqPairedFile1} ${fastqPairedFile2} > ${
-        samFileName
-    }
+
+    bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M ${refGenome} ${fastqPairedFile1} ${fastqPairedFile2} > G04868_L003.sam
+    
     """
 }
 
 
-////======== convert_sam_file_to_bam_file =======
-//
-//genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
-//referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
+//======== convert_sam_file_to_bam_file =======
+// DONE
+
+referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
 //samFileCh = Channel.fromPath("./G04868_L003.sam")
-//
-//process convertSamFileToBamFile {
-////    conda 'bwa'
-////    conda './tese.yaml'
-//
-//    echo true
-//
-//    input:
-//    val genomeFromPath from genomeFromPathCh
-//    val referenceGenomeFai from referenceGenomeFaiCh
-//    val samFile from samFileCh
-//
-//
-//    script:
-//
-//    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
-//    bamFile = "./" + genomeName + ".bam"
-//
-//    """
-//    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
-//    """
-//}
-//
+
+process convertSamFileToBamFile {
+//    conda 'bwa'
+//    conda './tese.yaml'
+
+    echo true
+
+    input:
+    val referenceGenomeFai from referenceGenomeFaiCh
+    val samFile from samFileCh
+
+
+    script:
+
+    bamFile = samFile.toString().split("\\.")[0] + ".bam"
+
+    """
+
+    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
+    """
+}
+
+
 ////======== sort_bam_file =======
 ////// TODO
 ////

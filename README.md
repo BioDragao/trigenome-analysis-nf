@@ -1,5 +1,4 @@
-# tese-nf
+# trigenome-analysis-nf
 
-The `nextflow` version of the entire analysis pipeline for Emilyn's thesis
+The `nextflow` version of the analysis pipeline for 3 genomes.
 
-https://github.com/BioDragao/tese 
