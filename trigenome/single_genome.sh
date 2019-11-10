@@ -11,4 +11,4 @@ git add -f ./single_genome.sh ./single_genome.nf \
 #./single_genome_report.html  \
 #./single_genome_timeline.html  \
 #./single_genome_flowchart_dag.html \
-./.nextflow.log
+#./.nextflow.log
