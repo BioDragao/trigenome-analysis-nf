@@ -63,8 +63,6 @@ process trimmomatic {
         newR2Unpaired = oldR2Name.toString().split("\\.")[0] + "_trimmed_unpaired.fastq"
 
 
-//  java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_1.fastq G04868_2.fastq G04868_1_trimmed_paired.fastq G04868_1_trimmed_unpaired.fastq G04868_2_trimmed_paired.fastq G04868_2_trimmed_unpaired.fastq LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
-
         return """
             java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE  -phred33  \
             ${oldR1Name}  \
@@ -108,8 +106,6 @@ fastqFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}_trimmed_paired.fast
 referenceGenomeCh = Channel.fromPath("./NC000962_3.fasta")
 
 
-//        bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired.fastq > G04868.sam
-
 process mapAndGenerateSamFile {
 //    conda 'bwa'
 //    conda './tese.yaml'
@@ -123,7 +119,6 @@ process mapAndGenerateSamFile {
 // TODO this is repeated, get value without consuming the content of channel in above usage
 
     script:
-//        bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M NC000962_3.fasta G04868_1_trimmed_paired.fastq G04868_2_trimmed_paired.fastq > G04868.sam
 
     samFileName = fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[0]  + "_" + fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[1]  + ".sam"
     fastqPairedFile1 = fastqFiles[1][0]
@@ -180,7 +175,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO this is repeated, get value without consuming the content of channel in above usage
 //
 //    script:
-////        samtools view - bt NC000962_3.fasta.fai G04868.sam > G04868.bam
 //
 //    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
 //    samFile = "./" + genomeName + ".sam"
@@ -196,7 +190,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        samtools sort G04868 . bam - o G04868.sorted.bam
 //
 //
 //
@@ -205,7 +198,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        samtools index G04868 . sorted.bam
 //
 //
 //
@@ -214,7 +206,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        samtools flagstat G04868 . sorted.bam > G04868_stats.txt
 //
 //
 //
@@ -223,7 +214,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        samtools mpileup - Q 23 -d 2000 -C 50 -ugf NC000962_3 . fasta G04868.sorted.bam | bcftools call -O v -vm - o G04868 . raw.vcf
 //
 //
 //
@@ -232,8 +222,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        vcfutils.pl varFilter - d 10 -D 2000 G04868.raw.vcf > G04868.filt.vcf
-//
 //
 //
 //
@@ -241,7 +229,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        bgzip -c G04868.filt.vcf > G04868.filt.vcf.gz
 //
 //
 //
@@ -250,7 +237,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        tabix -p vcf G04868 . filt.vcf.gz
 //
 //
 //
@@ -259,40 +245,11 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        java -Xmx4g -jar / opt / snpEff / snpEff.jar -no- downstream - no - upstream - v - c / opt / snpEff / snpEff.config NC000962_3 G04868 . filt.vcf > G04868.ann.vcf.gz
 //
 //
 //======== velveth_assembly =======
 //// TODO
 //
-//
-//        velveth G04868_41 41 -fastq -shortPaired G04868_1_trimmed_paired . fastq G04868_1_trimmed_unpaired.fastq - fastq - short G04868_2_trimmed_paired . fastq G04868_2_trimmed_unpaired.fastq
-//
-//
-//
-//======== velvetg_produce_graph =======
-//// TODO
-//
-//
-//        velvetg G04868_41 -exp_cov auto -cov_cutoff auto
-//
-//
-//
-//
-//======== assemblathon_stats =======
-//// TODO
-//
-//
-//        assemblathon_stats.pl./G04868_41/ contigs.fa
-//
-//
-//
-//
-//======== velveth_assembly =======
-//// TODO
-//
-//
-//        velveth G04868_49 49 -fastq -shortPaired G04868_1_trimmed_paired . fastq G04868_1_trimmed_unpaired.fastq - fastq - short G04868_2_trimmed_paired . fastq G04868_2_trimmed_unpaired.fastq
 //
 //
 //
@@ -301,7 +258,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        velvetg G04868_49 -exp_cov auto -cov_cutoff auto
 //
 //
 //
@@ -310,7 +266,7 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        assemblathon_stats.pl./G04868_49/ contigs.fa
+//
 //
 //
 //
@@ -318,13 +274,14 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        velveth G04868_55 55 -fastq - shortPaired G04868_1_trimmed_paired . fastq G04868_1_trimmed_unpaired.fastq - fastq - short G04868_2_trimmed_paired . fastq G04868_2_trimmed_unpaired.fastq
+//
+//
+//
 //
 //======== velvetg_produce_graph =======
 //// TODO
 //
 //
-//        velvetg G04868_55 - exp_cov auto -cov_cutoff auto
 //
 //
 //
@@ -332,35 +289,37 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        assemblathon_stats.pl./G04868_55/ contigs.fa
 //
 //
-//assemblathon_stats.pl./G04868_41/ contigs.fa
+//
+//======== velveth_assembly =======
+//// TODO
 //
 //
-//assemblathon_stats.pl./G04868_49/ contigs.fa
+//
+//======== velvetg_produce_graph =======
+//// TODO
 //
 //
-//assemblathon_stats.pl./G04868_55/ contigs.fa
 //
 //
-//#
-//Highest quality
-//k_mer: 49
+//
+//======== assemblathon_stats =======
+//// TODO
+//
+//
 //
 //
 //======== abacas_align_contigs =======
 //// TODO
 //
 //
-//        cd G04868_49 && cp../NC000962_3.fasta ./ && abacas.pl - r../NC000962_3.fasta -q contigs.fa -p promer -b -d -a
 //
 //
 //======== prokka_annotation =======
 //// TODO
 //
 //
-//cd ./ G04868_49 && prokka-- outdir./G04868_prokka --prefix G04868 contigs.fa_NC000962_3.fasta.fasta
 //
 //
 //
@@ -368,7 +327,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//gzip -c G04868_1.fastq > G04868_1.fastq.gz
 //
 //
 //
@@ -376,7 +334,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//gzip -c G04868_2.fastq > G04868_2.fastq.gz
 //
 //
 //
@@ -384,7 +341,6 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//snippy --cpus 4 --outdir G04868 --ref ./ NC000962_3 . gbk-- R1./G04868_1.fastq.gz --R2 ./ G04868_2 . fastq.gz
 //
 //#========================================================
 //# The next section starts when we've done the analysis for all genomes
@@ -392,13 +348,10 @@ process samtoolsFaidxReferenceGenome {
 //
 //======== snippy_core =======
 //
-//        snippy-core G04868_L003
 //
 //======== SNPtable =======
 //// TODO
 //
-//
-//        SNPtable_filter_Mtb.R core.tab
 //
 //
 //
@@ -406,4 +359,3 @@ process samtoolsFaidxReferenceGenome {
 //// TODO
 //
 //
-//        HammingFasta.R coreSNP_alignment_filtered.fas
