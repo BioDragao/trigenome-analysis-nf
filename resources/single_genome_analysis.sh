@@ -16,7 +16,7 @@ bwa index NC000962_3.fasta
 
 # map_and_generate_sam_file <<<<<
 
-bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_1_trimmed_paired.fastq G04868_L003_2_trimmed_paired.fastq >G04868_L003.sam
+bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_R1_trimmed_paired.fastq G04868_L003_R2_trimmed_paired.fastq >G04868_L003.sam
 
 # samtools_faidx_reference_genome <<<<<
 
@@ -60,7 +60,7 @@ java -Xmx4g -jar /opt/snpEff/snpEff.jar -no-downstream -no-upstream -v -c /opt/s
 
 # velveth_assembly <<<<<
 
-velveth G04868_L003_41 41 -fastq -shortPaired G04868_L003_1_trimmed_paired.fastq G04868_L003_1_trimmed_unpaired.fastq -fastq -short G04868_L003_2_trimmed_paired.fastq G04868_L003_2_trimmed_unpaired.fastq
+velveth G04868_L003_41 41 -fastq -shortPaired G04868_L003_R1_trimmed_paired.fastq G04868_L003_R1_trimmed_unpaired.fastq -fastq -short G04868_L003_R2_trimmed_paired.fastq G04868_L003_R2_trimmed_unpaired.fastq
 
 # velvetg_produce_graph <<<<<
 
@@ -72,7 +72,7 @@ assemblathon_stats.pl ./G04868_L003_41/contigs.fa
 
 # velveth_assembly <<<<<
 
-velveth G04868_L003_49 49 -fastq -shortPaired G04868_L003_1_trimmed_paired.fastq G04868_L003_1_trimmed_unpaired.fastq -fastq -short G04868_L003_2_trimmed_paired.fastq G04868_L003_2_trimmed_unpaired.fastq
+velveth G04868_L003_49 49 -fastq -shortPaired G04868_L003_R1_trimmed_paired.fastq G04868_L003_R1_trimmed_unpaired.fastq -fastq -short G04868_L003_R2_trimmed_paired.fastq G04868_L003_R2_trimmed_unpaired.fastq
 
 # velvetg_produce_graph <<<<<
 
@@ -84,7 +84,7 @@ assemblathon_stats.pl ./G04868_L003_49/contigs.fa
 
 # velveth_assembly <<<<<
 
-velveth G04868_L003_55 55 -fastq -shortPaired G04868_L003_1_trimmed_paired.fastq G04868_L003_1_trimmed_unpaired.fastq -fastq -short G04868_L003_2_trimmed_paired.fastq G04868_L003_2_trimmed_unpaired.fastq
+velveth G04868_L003_55 55 -fastq -shortPaired G04868_L003_R1_trimmed_paired.fastq G04868_L003_R1_trimmed_unpaired.fastq -fastq -short G04868_L003_R2_trimmed_paired.fastq G04868_L003_R2_trimmed_unpaired.fastq
 
 # velvetg_produce_graph <<<<<
 
@@ -112,15 +112,15 @@ cd ./G04868_L003_49 && prokka --outdir ./G04868_L003_prokka --prefix G04868_L003
 
 # gzip_compression <<<<<
 
-gzip -c G04868_L003_1.fastq >G04868_L003_1.fastq.gz
+gzip -c G04868_L003_R1.fastq > G04868_L003_R1.fastq.gz
 
 # gzip_compression <<<<<
 
-gzip -c G04868_L003_2.fastq >G04868_L003_2.fastq.gz
+gzip -c G04868_L003_R2.fastq > G04868_L003_R2.fastq.gz
 
 # snippy_command <<<<<
 
-snippy --cpus 4 --outdir G04868_L003 --ref ./NC000962_3.gbk --R1 ./G04868_L003_1.fastq.gz --R2 ./G04868_L003_2.fastq.gz
+snippy --cpus 4 --outdir G04868_L003 --ref ./NC000962_3.gbk --R1 ./G04868_L003_R1.fastq.gz --R2 ./G04868_L003_R2.fastq.gz
 
 # SNPtable <<<<<
 
