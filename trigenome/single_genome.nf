@@ -8,10 +8,13 @@ NC000962_3.fasta
 NC000962_3.gbk
 */
 
-//====== gzip ============
+// TODO rely on the input param to have global variabel of genomeName
+
+//====== gzip decompress ============
 // DONE
 
-gzippedFilePairs = Channel.fromFilePairs('G04868_L003_R{1,2}.fastq.gz')
+/*
+gzippedFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}.fastq.gz')
 
 
 process gzipDecompressFiles {
@@ -20,7 +23,7 @@ process gzipDecompressFiles {
 
     input:
 
-    val fileList from gzippedFilePairs
+    val fileList from gzippedFilePairsCh
 
     script:
 
@@ -38,12 +41,14 @@ process gzipDecompressFiles {
             """
     }
 }
+*/
 
 
 //====== trimmomatic ============
 // DONE
 
-fastqFilePairs = Channel.fromFilePairs('G04868_L003_R{1,2}.fastq.gz')
+/*
+fastqFilePairsCh = Channel.fromFilePairs('G04868_L003_R{1,2}.fastq.gz')
 
 
 process trimmomatic {
@@ -52,7 +57,7 @@ process trimmomatic {
 
     input:
 
-    val fileList from fastqFilePairs
+    val fileList from fastqFilePairsCh
 
 
     script:
@@ -80,11 +85,13 @@ process trimmomatic {
             """
     }
 }
+*/
 
 //====== bwa index ============
 // DONE
+/*
 
-referenceGenome = Channel.fromPath("./NC000962_3.fasta")
+referenceGenomeCh = Channel.fromPath("./NC000962_3.fasta")
 
 process bwaIndexReferenceGenome {
 //    conda 'bwa'
@@ -93,7 +100,7 @@ process bwaIndexReferenceGenome {
     echo true
 
     input:
-    val refGenome from referenceGenome
+    val refGenome from referenceGenomeCh
 
     script:
 
@@ -101,6 +108,31 @@ process bwaIndexReferenceGenome {
     bwa index ${refGenome}
     """
 }
+
+*/
+////======== samtools_faidx_reference_genome =======
+//// DONE
+//
+//
+//referenceGenome = Channel.fromPath("./NC000962_3.fasta")
+//
+//process samtoolsFaidxReferenceGenome {
+////    conda 'bwa'
+////    conda './tese.yaml'
+//
+//    echo true
+//
+//    input:
+//    val refGenome from referenceGenome
+//
+//    script:
+//
+//    """
+//    samtools faidx  ${refGenome}
+//    """
+//}
+//
+//
 
 //======= map_and_generate_sam_file =======
 // DONE
@@ -121,228 +153,209 @@ process mapAndGenerateSamFile {
 
     script:
 
-    samFileName = fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[0]  + "_" + fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[1]  + ".sam"
+    samFileName = fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[0] + "_" + fastqFiles[1][0].toString().split("\\.")[0].split("\\_")[1] + ".sam"
     fastqPairedFile1 = fastqFiles[1][0]
     fastqPairedFile2 = fastqFiles[1][1]
 
     """
-    bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M ${refGenome} ${fastqPairedFile1} ${fastqPairedFile2} > ${samFileName}
-    """
-}
-
-//======== samtools_faidx_reference_genome =======
-// DONE
-
-
-referenceGenome = Channel.fromPath("./NC000962_3.fasta")
-
-process samtoolsFaidxReferenceGenome {
-//    conda 'bwa'
-//    conda './tese.yaml'
-
-    echo true
-
-    input:
-    val refGenome from referenceGenome
-
-    script:
-
-    """
-    samtools faidx  ${refGenome}
+    bwa mem -R "@RG\\tID:G04868\\tSM:G04868\\tPL:Illumina" -M ${refGenome} ${fastqPairedFile1} ${fastqPairedFile2} > ${
+        samFileName
+    }
     """
 }
 
 
-//======== convert_sam_file_to_bam_file =======
-
-genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
-referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
-
-process convertSamFileToBamFile {
-//    conda 'bwa'
-//    conda './tese.yaml'
-
-    echo true
-
-    input:
-    val genomeFromPath from genomeFromPathCh
-    val referenceGenomeFai from referenceGenomeFaiCh
-
-
-    script:
-
-    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
-    samFile = "./" + genomeName + ".sam"
-    bamFile = "./" + genomeName + ".bam"
-
-    """
-    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
-    """
-}
-
-//======== sort_bam_file =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== samtools_index_sorted_bam =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== mapping_statistics =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== samtools_mpileup =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== vcfutils_filter =======
-//// TODO
-//
-//
-//
-//
-//
-//======== bgzip_filt_file =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== run_tabix =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== snpEff =======
-//// TODO
-//
-//
-//
-//
-//======== velveth_assembly =======
-//// TODO
-//
-//
-//
-//
-//
-//======== velvetg_produce_graph =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== assemblathon_stats =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== velveth_assembly =======
-//// TODO
-//
-//
-//
-//
-//
-//
-//======== velvetg_produce_graph =======
-//// TODO
-//
-//
-//
-//
-//
-//======== assemblathon_stats =======
-//// TODO
-//
-//
-//
-//
-//
-//======== velveth_assembly =======
-//// TODO
-//
-//
-//
-//======== velvetg_produce_graph =======
-//// TODO
-//
-//
-//
-//
-//
-//======== assemblathon_stats =======
-//// TODO
-//
-//
-//
-//
-//======== abacas_align_contigs =======
-//// TODO
-//
-//
-//
-//
-//======== prokka_annotation =======
-//// TODO
-//
-//
-//
-//
-//
-//======== gzip_compression =======
-//// TODO
-//
-//
-//
-//
-//
-//======== snippy_command =======
-//// TODO
-//
-//
-//
-//#========================================================
-//# The next section starts when we've done the analysis for all genomes
-//#========================================================
-//
-//======== snippy_core =======
-//
-//
-//======== SNPtable =======
-//// TODO
-//
-//
-//
-//
-//======== HammingFasta =======
-//// TODO
-//
-//
+////======== convert_sam_file_to_bam_file =======
+//
+//genomeFromPathCh = Channel.fromPath('./G04868_L003_R1.fastq.gz')
+//referenceGenomeFaiCh = Channel.fromPath('./NC000962_3.fasta.fai')
+//samFileCh = Channel.fromPath("./G04868_L003.sam")
+//
+//process convertSamFileToBamFile {
+////    conda 'bwa'
+////    conda './tese.yaml'
+//
+//    echo true
+//
+//    input:
+//    val genomeFromPath from genomeFromPathCh
+//    val referenceGenomeFai from referenceGenomeFaiCh
+//    val samFile from samFileCh
+//
+//
+//    script:
+//
+//    genomeName = "G04868_" + genomeFromPath.toString().split("\\.")[0].split("\\_")[1]
+//    bamFile = "./" + genomeName + ".bam"
+//
+//    """
+//    samtools view -bt ${referenceGenomeFai} ${samFile} > ${bamFile}
+//    """
+//}
+//
+////======== sort_bam_file =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== samtools_index_sorted_bam =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== mapping_statistics =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== samtools_mpileup =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== vcfutils_filter =======
+////// TODO
+////
+////
+////
+////
+////
+////======== bgzip_filt_file =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== run_tabix =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== snpEff =======
+////// TODO
+////
+////
+////
+////
+////======== velveth_assembly =======
+////// TODO
+////
+////
+////
+////
+////
+////======== velvetg_produce_graph =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== assemblathon_stats =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== velveth_assembly =======
+////// TODO
+////
+////
+////
+////
+////
+////
+////======== velvetg_produce_graph =======
+////// TODO
+////
+////
+////
+////
+////
+////======== assemblathon_stats =======
+////// TODO
+////
+////
+////
+////
+////
+////======== velveth_assembly =======
+////// TODO
+////
+////
+////
+////======== velvetg_produce_graph =======
+////// TODO
+////
+////
+////
+////
+////
+////======== assemblathon_stats =======
+////// TODO
+////
+////
+////
+////
+////======== abacas_align_contigs =======
+////// TODO
+////
+////
+////
+////
+////======== prokka_annotation =======
+////// TODO
+////
+////
+////
+////
+////
+////======== gzip_compression =======
+////// TODO
+////
+////
+////
+////
+////
+////======== snippy_command =======
+////// TODO
+////
+////
+////
+////#========================================================
+////# The next section starts when we've done the analysis for all genomes
+////#========================================================
+////
+////======== snippy_core =======
+////
+////
+////======== SNPtable =======
+////// TODO
+////
+////
+////
+////
+////======== HammingFasta =======
+////// TODO
+////
+////

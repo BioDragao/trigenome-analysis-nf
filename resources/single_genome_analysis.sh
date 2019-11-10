@@ -1,26 +1,30 @@
 #!/usr/bin/env bash
 
-# gzip these files <<<<<
-
+# gzip decompress <<<<<
+# DONE
 gzip -dc G04868_L003_R1.fastq.gz >G04868_L003_R1.fastq
 
 gzip -dc G04868_L003_R2.fastq.gz >G04868_L003_R2.fastq
 
 # trimmomatic <<<<<
+# DONE
 
 java -jar /opt/Trimmomatic-0.36/trimmomatic-0.36.jar PE -phred33 G04868_L003_R1.fastq G04868_L003_R2.fastq G04868_L003_R1_trimmed_paired.fastq G04868_L003_R1_trimmed_unpaired.fastq G04868_L003_R2_trimmed_paired.fastq G04868_L003_R2_trimmed_unpaired.fastq LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
 
 # bwa_index_reference_genome <<<<<
+# DONE
 
 bwa index NC000962_3.fasta
 
-# map_and_generate_sam_file <<<<<
-
-bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_R1_trimmed_paired.fastq G04868_L003_R2_trimmed_paired.fastq >G04868_L003.sam
-
 # samtools_faidx_reference_genome <<<<<
+# DONE
 
 samtools faidx NC000962_3.fasta
+
+# map_and_generate_sam_file <<<<<
+# DONE
+
+bwa mem -R "@RG\tID:G04868\tSM:G04868\tPL:Illumina" -M NC000962_3.fasta G04868_L003_R1_trimmed_paired.fastq G04868_L003_R2_trimmed_paired.fastq >G04868_L003.sam
 
 # convert_sam_file_to_bam_file <<<<<
 
