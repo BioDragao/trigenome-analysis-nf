@@ -386,7 +386,13 @@ process samtoolsFaidxReferenceGenome {
 //
 //snippy --cpus 4 --outdir G04868 --ref ./ NC000962_3 . gbk-- R1./G04868_1.fastq.gz --R2 ./ G04868_2 . fastq.gz
 //
+//#========================================================
+//# The next section starts when we've done the analysis for all genomes
+//#========================================================
 //
+//======== snippy_core =======
+//
+//        snippy-core G04868_L003
 //
 //======== SNPtable =======
 //// TODO

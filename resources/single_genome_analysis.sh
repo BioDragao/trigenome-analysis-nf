@@ -122,6 +122,14 @@ gzip -c G04868_L003_R2.fastq > G04868_L003_R2.fastq.gz
 
 snippy --cpus 4 --outdir G04868_L003 --ref ./NC000962_3.gbk --R1 ./G04868_L003_R1.fastq.gz --R2 ./G04868_L003_R2.fastq.gz
 
+#========================================================
+# The next section starts when we've done the analysis for all genomes
+#========================================================
+
+# snippy_core <<<<<
+
+snippy-core G04868_L003
+
 # SNPtable <<<<<
 
 SNPtable_filter_Mtb.R core.tab
